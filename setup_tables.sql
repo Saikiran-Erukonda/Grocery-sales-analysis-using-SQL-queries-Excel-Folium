@@ -84,7 +84,7 @@ select count(*) from sales where totalprice = 0; --  all are empty
 --				on s.productid = p.productid ;
 -- It works in SQL server but not in Postgresql
 UPDATE sales as s
-SET totalprice = s.quantity * p.price, 2
+SET totalprice = s.quantity * p.price
 from products as p
 where s.productid = p.productid ; 
 
@@ -98,4 +98,5 @@ select Extract(YEAR from salesdate) as Year,
 					from sales 
 					group by 1,2
 					order by 1,2;
+
 
