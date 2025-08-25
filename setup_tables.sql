@@ -91,3 +91,11 @@ where s.productid = p.productid ;
 UPDATE sales set totalprice = Round(totalprice::numeric,2);
 
 select  Productid,productname,resistant from products order by 3;
+
+select Extract(YEAR from salesdate) as Year,
+	   Extract(Month from salesdate) as month,count(salesid) as sales_cnt,
+					sum(totalprice) as revenue
+					from sales 
+					group by 1,2
+					order by 1,2;
+
