@@ -61,47 +61,60 @@ select Extract(YEAR from salesdate) as Year,
 					group by 1,2
 					order by 1,2;
 
-
+-- --------------------------------------------------------------------------
 -- ISSUE 1
 UPDATE sales as s
-SET totalprice = s.quantity * (p.price * (1-s.discount))
+SET totalprice = (s.quantity * p.price) * (1-s.discount)
 from products as p
 where s.productid = p.productid ; 
+
 UPDATE sales set totalprice = Round(totalprice::numeric,2);
 
+-- ----------------------------------------------------------------------------
 -- ISSUE 2
-CREATE TABLE All_sales AS
-SELECT 
-    salesid,
-    salespersonid,
-    customerid,
-    productid,
-    quantity,
-    discount,
-    totalprice,
-    transactionnumber,
-    MAX(salesdate) FILTER(WHERE salesdate is not null)
-	OVER (
-        ORDER BY salesid
-        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-    ) AS effective_salesdate
-FROM sales;
--- NEW TABLE Created as All_sales
 
-select * from all_sales order by 1 limit 300;
-select * from all_sales where salesid is NULL
-							or salespersonid is NULL
-							or customerid is NULL
-							or productid is NULL
-							or quantity is NULL
-							or discount is NULL
-							or totalprice is NULL
-							or effective_salesdate is NULL
-							or transactionnumber is NULL
-							order by 1;
+SELECT EXTRACT(YEAR from salesdate) as   Year,
+		EXTRACT(Month from salesdate) as Month,
+		Count(salesid) as sales_m,
+		Round(sum(totalprice::numeric),2) as Revenue
+		from sales
+		group by 1,2
+		order by 2;
 
--- Now give foriegn key to this new_table 
-Alter table all_sales
-add constraint fk_emp foreign key(salespersonid) references Employee(EmployeeID),
-add constraint fk_customer foreign key(customerid) references customers(CustomerID),
-add constraint fk_product foreign key(productid) references Products(ProductID);
+select avg(sales_d) as Avg_day_sale from 
+(SELECT EXTRACT(YEAR from salesdate) as   Year,
+		EXTRACT(Month from salesdate) as Month,
+		EXTRACT(day from salesdate) as day,
+		Count(salesid) as sales_d,
+		Round(sum(totalprice::numeric),2) as Revenue
+		from sales
+		where TO_CHAR(salesdate,'yyyy-mm-dd') >= '2018-05-01' 
+		-- or salesdate is null
+		group by 1,2,3
+		order by 2,3);
+		
+select * from sales  order by 1 limit 5000;
+
+with ranked_nulls as
+(SELECT
+    salesid,salesdate,
+    ROW_NUMBER() OVER (ORDER BY salesid) AS rn
+FROM sales
+WHERE salesdate IS NULL)
+
+Update sales 
+SET salesdate = CASE
+					when r.rn <= 51878 then date '2018-05-10'
+					else date '2018-05-11'
+			    end
+from ranked_nulls as r
+where sales.salesid = r.salesid;
+
+
+select * from sales where salesid =  51 
+							 or
+						  salesid =  228 
+						  or
+						  salesid =  6706610
+						  or
+						  salesid =  6706775;
