@@ -86,3 +86,18 @@ SELECT
         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
     ) AS effective_salesdate
 FROM sales;
+-- NEW TABLE Created as All_sales
+
+select * from all_sales order by 1 limit 300;
+select * from all_sales where salesid is NULL
+							or salespersonid is NULL
+							or customerid is NULL
+							or productid is NULL
+							or quantity is NULL
+							or discount is NULL
+							or totalprice is NULL
+							or effective_salesdate is NULL
+							or transactionnumber is NULL
+							order by 1;
+
+-- Now give foriegn key to this new_table 
