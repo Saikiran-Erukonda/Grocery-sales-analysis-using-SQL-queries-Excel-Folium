@@ -23,3 +23,39 @@ The Grocery Sales Database is a structured relational dataset designed for analy
 ## 3. Processing data.
 
 ## 4. Descriptive Statistics.
+### 1) Monthly Sales Performance
+> Calculate total sales for each month.
+``` sql
+select 	EXTRACT(year from salesdate) as year,
+		EXTRACT(month from salesdate) as month,
+		count(*) as sales_count 
+		from sales
+		group by 1,2 
+		order by 2;
+```
+|"year"|	"month"	|"sales_count"|
+-------|-----------|--------------|
+|2018|	1	|1607050|
+|2018	|2	|1451366|
+|2018	|3	|1609190|
+|2018|	4	|1556091|
+|2018	|5	|534428|
+
+> Compare sales performance across different product categories each month
+``` sql
+select EXTRACT(year from s.salesdate) as year,
+	   EXTRACT(month from s.salesdate) as month,
+	   p.category_id,
+	   c.categoryname,
+	   count(s.salesid) as sales_count ,
+	   Rank() OVER(partition by EXTRACT(month from s.salesdate) order by count(s.salesid) desc) as rank
+from sales as s 
+			  join
+			  products as p
+			  on p.productid = s.productid
+			  join
+			  category as c 
+			  on c.categoryid = p.category_id
+			  group by 1,2,3,4
+			  order by 2,3
+```
