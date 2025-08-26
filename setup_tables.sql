@@ -64,39 +64,3 @@ select * from city;
 select * from customers;
 select * from employee;
 select  * from products;
-
-
-select count(*) from products where price = 0;  -- there were no product with price Zero.
-select count(*) from products where resistant = 'Unknown';  --there were 140 Unknown in resistant column
-select count(*) from products where isallergic = 'Unknown'; --there were 130 Unknown in isallergic column
-
-
--- DATA Cleaning and handling missing values;
--- check nulls in column price
-select * from sales limit 250;
-select count(*) from sales where totalprice = 0; --  all are empty
-
--- using update we are changing the total price.
--- update sales set s.totalprice = s.quantity * p.price 
---				from sales as s
---				join
---				products as p
---				on s.productid = p.productid ;
--- It works in SQL server but not in Postgresql
-UPDATE sales as s
-SET totalprice = s.quantity * p.price
-from products as p
-where s.productid = p.productid ; 
-
-UPDATE sales set totalprice = Round(totalprice::numeric,2);
-
-select  Productid,productname,resistant from products order by 3;
-
-select Extract(YEAR from salesdate) as Year,
-	   Extract(Month from salesdate) as month,count(salesid) as sales_cnt,
-					sum(totalprice) as revenue
-					from sales 
-					group by 1,2
-					order by 1,2;
-
-
