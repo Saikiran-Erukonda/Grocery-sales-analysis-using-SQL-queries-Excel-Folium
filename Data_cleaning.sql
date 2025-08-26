@@ -101,3 +101,7 @@ select * from all_sales where salesid is NULL
 							order by 1;
 
 -- Now give foriegn key to this new_table 
+Alter table all_sales
+add constraint fk_emp foreign key(salespersonid) references Employee(EmployeeID),
+add constraint fk_customer foreign key(customerid) references customers(CustomerID),
+add constraint fk_product foreign key(productid) references Products(ProductID);
