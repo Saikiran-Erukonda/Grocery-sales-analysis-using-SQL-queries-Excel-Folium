@@ -25,7 +25,19 @@ select * from products where productname is NULL
 							 or vitalitydays is NULL; --226 rows / 452 rows
 -- As of now, we didn't changed in this product table
 
+select * from all_sales order by 1 limit 300;
+select * from all_sales where salesid is NULL
+							or salespersonid is NULL
+							or customerid is NULL
+							or productid is NULL
+							or quantity is NULL
+							or discount is NULL
+							or totalprice is NULL
+							or effective_salesdate is NULL
+							or transactionnumber is NULL
+							order by 1;
 
+-- Now give foriegn key to this new_table 
 select * from sales order by 1;
 select * from sales where salesid is NULL
 							or salespersonid is NULL
