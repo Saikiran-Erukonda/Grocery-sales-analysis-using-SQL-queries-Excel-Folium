@@ -137,4 +137,46 @@ The count of customers in each segment as per above Query
 
 > Identify the repeat customers vs 1 time buyer
 
-> Analyze average order value and basket size per customer. 
+> Analyze average order value and basket size per customer.
+``` sql
+select customerid,
+	 round(avg(totalprice)::numeric,2) as avg_order_value,
+	 sum(quantity) as basket_size
+	 from sales
+group by 1 order by 2,3 asc
+```
+
+### 4) Sales Person Effectiveness
+> Calculate total sales attributed  to each  sales person
+``` sql
+select salespersonid,
+	   count(salesid) as sales_done,
+	   rank() over(order by count(salesid) desc) as rank
+	   from sales
+	   group by 1 order by 1;
+```
+|salespersonid|sales_done|rank|
+|----|---|---|
+|1	|293394|	19|
+|2	|293737	|13|
+|3	|293175	|21|
+|4	|294744	|2|
+|5	|293711	|14|
+|6	|293973	|9|
+|7	|293967	|10|
+|8	|294449	|3|
+|9	|294180	|5|
+|10	|293888	|11|
+|11	|294110	|6|
+|12	|293164	|22|
+|13	|293530	|18|
+|14	|294035	|8|
+|15	|294096	|7|
+|16	|293685	|16|
+|17	|292521	|23|
+|18	|294419	|4|
+|19	|293875	|12|
+|20	|293562	|17|
+|21	|294983	|1|
+|22	|293224	|20|
+|23	|293703	|15|
