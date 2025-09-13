@@ -185,32 +185,6 @@ select salespersonid,
 	   from sales
 	   group by 1 order by 1;
 ```
-|salespersonid|sales_done|rank|
-|----|---|---|
-|1	|293394|	19|
-|2	|293737	|13|
-|3	|293175	|21|
-|4	|294744	|2|
-|5	|293711	|14|
-|6	|293973	|9|
-|7	|293967	|10|
-|8	|294449	|3|
-|9	|294180	|5|
-|10	|293888	|11|
-|11	|294110	|6|
-|12	|293164	|22|
-|13	|293530	|18|
-|14	|294035	|8|
-|15	|294096	|7|
-|16	|293685	|16|
-|17	|292521	|23|
-|18	|294419	|4|
-|19	|293875	|12|
-|20	|293562	|17|
-|21	|294983	|1|
-|22	|293224	|20|
-|23	|293703	|15|
-
 > Analyze sales trends based on individual salesperson contributions over time
 
 ``` sql
@@ -251,7 +225,12 @@ Select
 	full outer join apr on COALESCE(jan.salespersonid,feb.salespersonid,mar.salespersonid) = apr.salespersonid
 	order by salespersonid
 ```
-<img width="757" height="578" alt="image" src="https://github.com/user-attachments/assets/cc6c3c4f-4590-4eef-bfc1-d39d107687c8" />
+
+|Jan Sales|Feb Sales|March Sales|April Sales| Overall Sales|
+|----|---|---|--|--|
+|<img src="https://github.com/user-attachments/assets/62624ac3-77f9-45e8-85b3-ad84de20ef09" alt="Jan sales" style ="width:100%; height:auto;" /> |<img  src="https://github.com/user-attachments/assets/21e38925-33b9-4f3b-9b57-a516bfc14704" alt="feb sales" style ="width:100%; height:auto;" />|<img  src="https://github.com/user-attachments/assets/02f10f35-d501-4cb1-8b7d-38490c9df4ee" alt="March sales" style ="width:100%; height:auto;" />|<img   src="https://github.com/user-attachments/assets/f3f7293a-8afb-4d9f-b39d-a598e614031f" alt="April sales" style ="width:100%; height:auto;" />|<img   src="https://github.com/user-attachments/assets/9b9e8ff3-f970-4c49-811f-695d28191915" alt="Overall sales" style ="width:100%; height:auto;" />|
+
+
 
 ### 5) Geographical Sales insights
 > Map salesdata to specific cities and countries to identify top performing region
