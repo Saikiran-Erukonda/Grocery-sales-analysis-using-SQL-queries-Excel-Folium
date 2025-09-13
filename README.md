@@ -77,6 +77,9 @@ select s.productid,p.productname,
 			  on p.productid = s.productid
 	   group by 1,2;
 ```
+<img src="https://github.com/user-attachments/assets/3e818759-ff76-4aed-867b-f16ea4096bf5" alt="Top 5selling products" style= "width:50%; height:auto;"/>
+
+
 > Analyze sales quantity and revenue to identify high-demand products.
 ``` sql
 select s.productid,p.productname,
@@ -90,6 +93,7 @@ select s.productid,p.productname,
 			  on p.productid = s.productid
 	   group by 1,2;
 ```
+<img src="https://github.com/user-attachments/assets/23bdc7ae-feef-4fc3-96ed-22543ccb70f7" style= "width:40%; height:auto;" />
 
 > Examine the impact of product classification on sales performance
 ``` sql
@@ -104,6 +108,7 @@ select p.class_,
 			  on p.productid = s.productid
 	   group by 1;
 ```
+<img src="https://github.com/user-attachments/assets/54aebd6e-6f60-488b-8ad6-1a52fd39de7c" alt = "Class performance" style= "width:40%; height:auto;" />
 
 ### 3) Customer Purchase behaviour
 > Segment customers based on their purchase frequency and total spend.
