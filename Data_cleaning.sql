@@ -110,7 +110,7 @@ SET salesdate = CASE
 from ranked_nulls as r
 where sales.salesid = r.salesid;
 
-
+-- checking the changes occured or not
 select * from sales where salesid =  51 
 							 or
 						  salesid =  228 
