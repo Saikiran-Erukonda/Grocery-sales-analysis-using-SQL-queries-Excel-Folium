@@ -154,12 +154,27 @@ The count of customers in each segment as per above Query
 
 > Analyze average order value and basket size per customer.
 ``` sql
-select customerid,
+with table1 as (select customerid,
 	 round(avg(totalprice)::numeric,2) as avg_order_value,
 	 sum(quantity) as basket_size
 	 from sales
-group by 1 order by 2,3 asc
+group by 1 order by 2,3 asc)
+-- Starting value 37 to 1591 
+-- divide into 4 parts 0 - 400 | 400 -800 |800-1200| 1200 -1600
+Select Case 
+		when avg_order_value < 401 then '0$ to 400$'
+		when avg_order_value > 400 and avg_order_value < 801 then '401$ to 800$'
+		when avg_order_value > 800 and avg_order_value <1201 then '801$ to 1200$'
+		when avg_order_value > 1200 and avg_order_value < 1600 then '1201$ to 1600$'
+		end as bins,
+		count(customerid) as no_of_customers,
+		avg(basket_size) as basket_size
+		from table1
+		group by 1
+		order by 1;
 ```
+<img src="https://github.com/user-attachments/assets/9bc273d1-f437-4b81-b9ce-f06b97eed39b" style ="width:60%; height:auto;" />
+
 
 ### 4) Sales Person Effectiveness
 > Calculate total sales attributed  to each  sales person and Identify top performing and underperforming sales staff
