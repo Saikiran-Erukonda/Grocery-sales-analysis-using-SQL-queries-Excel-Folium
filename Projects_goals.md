@@ -1,6 +1,6 @@
 # 1. Monthly Sales Performance
 - Objective: Analyze sales performance within the four-month period to identify trends and patterns.
--Tasks:
+- Tasks:
 1. Calculate total sales for each month.
 2. Compare sales performance across different product categories each month.
 # 2. Top Products Identification
