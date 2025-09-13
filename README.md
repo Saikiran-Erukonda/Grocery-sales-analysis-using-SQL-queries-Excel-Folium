@@ -33,6 +33,7 @@ select 	EXTRACT(year from salesdate) as year,
 		group by 1,2 
 		order by 2;
 ```
+
 |"year"|	"month"	|"sales_count"|
 |-------|-----------|--------------|
 |2018|	1	|1607050|
@@ -41,10 +42,11 @@ select 	EXTRACT(year from salesdate) as year,
 |2018|	4	|1556091|
 |2018	|5	|534428|
 
+<img src="https://github.com/user-attachments/assets/cf5db461-8662-46b3-be3d-ccee63a9cae2" alt="Monthly sales" style="width:40%; height:auto;" />
+
 > Compare sales performance across different product categories each month
 ``` sql
-select EXTRACT(year from s.salesdate) as year,
-	   EXTRACT(month from s.salesdate) as month,
+select EXTRACT(month from s.salesdate) as month,
 	   p.category_id,
 	   c.categoryname,
 	   count(s.salesid) as sales_count ,
@@ -56,9 +58,13 @@ from sales as s
 			  join
 			  category as c 
 			  on c.categoryid = p.category_id
-			  group by 1,2,3,4
-			  order by 2,3
+			  group by 1,2,3
+			  order by 1,4 desc
 ```
+|Monthly category-wise sales|Category-wise sales|
+|---|---|
+|<img src="https://github.com/user-attachments/assets/b9ececc4-f01e-4fbf-8dc5-ff5ac0f54214"  alt="Monthly Category sales" style ="width:100%; height:auto;" /> |<img src="https://github.com/user-attachments/assets/b426a73a-dc7b-40a4-b016-d930226461a0" alt="Sales by Category" style= "width:85%; height:auto;" />|
+
 ### 2) Top products Identification
 > Rank Products based on total sales revenue
 ``` sql
@@ -147,7 +153,7 @@ group by 1 order by 2,3 asc
 ```
 
 ### 4) Sales Person Effectiveness
-> Calculate total sales attributed  to each  sales person
+> Calculate total sales attributed  to each  sales person and Identify top performing and underperforming sales staff
 ``` sql
 select salespersonid,
 	   count(salesid) as sales_done,
@@ -180,3 +186,72 @@ select salespersonid,
 |21	|294983	|1|
 |22	|293224	|20|
 |23	|293703	|15|
+
+> Analyze sales trends based on individual salesperson contributions over time
+
+``` sql
+with jan as(select salespersonid,
+	   count(salesid) as jan_sales,
+	   rank() over(order by count(salesid) desc) as jan_rank
+	   from sales
+	   where TO_Char(salesdate,'yyyy-mm')='2018-01'
+	   group by 1),
+feb as(select salespersonid,
+	   count(salesid) as feb_sales,
+	   rank() over(order by count(salesid) desc) as feb_rank
+	   from sales
+	   where TO_Char(salesdate,'yyyy-mm')='2018-02'
+	   group by 1),
+mar as(select salespersonid,
+	   count(salesid) as mar_sales,
+	   rank() over(order by count(salesid) desc) as mar_rank
+	   from sales
+	   where TO_Char(salesdate,'yyyy-mm')='2018-03'
+	   group by 1),
+apr as(select salespersonid,
+		count(salesid) as apr_sales,
+		rank() over(order by count(salesid) desc) as apr_rank
+		from sales
+		where To_char(salesdate,'yyyy-mm')='2018-04'
+		group by 1)
+-- final join
+Select 
+	COALESCE(jan.salespersonid,feb.salespersonid,mar.salespersonid,apr.salespersonid) as salespersonid,
+	jan_sales,jan_rank,
+	feb_sales,feb_rank,
+	mar_sales,mar_rank,
+	apr_sales,apr_rank
+	from jan
+	full outer join feb on jan.salespersonid =feb.salespersonid
+	full outer join mar on COALESCE(jan.salespersonid,feb.salespersonid) = mar.salespersonid
+	full outer join apr on COALESCE(jan.salespersonid,feb.salespersonid,mar.salespersonid) = apr.salespersonid
+	order by salespersonid
+```
+<img width="757" height="578" alt="image" src="https://github.com/user-attachments/assets/cc6c3c4f-4590-4eef-bfc1-d39d107687c8" />
+
+### 5) Geographical Sales insights
+> Map salesdata to specific cities and countries to identify top performing region
+``` sql
+select c.cityid,ci.city_name,count(s.salesid) as city_sales,
+		rank() over(order by count(s.salesid) desc) as rank
+		from sales as s
+		join customers as c on s.customerid = c.customerid
+		left join city as ci on  c.cityid= ci.city_id 
+		group by 1,2
+		order by 3 desc; 
+```
+> City wise 2nd last Selling Category (rank = 10) 
+``` sql
+With City_cat_sales as (Select  c.cityid,ci.city_name,
+		cat.categoryname,
+		count(s.salesid) as city_sales,
+		rank() over(partition by ci.city_name order by count(salesid) desc) as rank 
+		from sales as s
+		join customers as c on s.customerid = c.customerid
+		left join products as p on p.productid = s.productid
+		left join city as ci on  c.cityid= ci.city_id
+		left join category as cat on cat.categoryid = p.category_id
+		group by 1,2,3
+		order by 1,4 desc)
+Select city_name,categoryname,city_sales,rank from City_cat_sales where rank = 10 -- change rank 0 to 11 to know position
+``` 
