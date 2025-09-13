@@ -34,7 +34,7 @@ select 	EXTRACT(year from salesdate) as year,
 		order by 2;
 ```
 |"year"|	"month"	|"sales_count"|
--------|-----------|--------------|
+|-------|-----------|--------------|
 |2018|	1	|1607050|
 |2018	|2	|1451366|
 |2018	|3	|1609190|
@@ -59,3 +59,82 @@ from sales as s
 			  group by 1,2,3,4
 			  order by 2,3
 ```
+### 2) Top products Identification
+> Rank Products based on total sales revenue
+``` sql
+select s.productid,p.productname,
+	   round(sum(s.totalprice)::numeric,2) as sales_revenue,
+	   rank() over(order by sum(s.totalprice) desc) as rank
+	   from sales as s 
+			  join
+			  products as p
+			  on p.productid = s.productid
+	   group by 1,2;
+```
+> Analyze sales quantity and revenue to identify high-demand products.
+``` sql
+select s.productid,p.productname,
+	   count(s.salesid) as sales_count,
+	   round(sum(s.totalprice)::numeric,2) as sales_revenue,
+	   sum(s.quantity) as quantity,
+	   rank() over(order by sum(s.quantity) desc) as rank
+	   from sales as s 
+			  join
+			  products as p
+			  on p.productid = s.productid
+	   group by 1,2;
+```
+
+> Examine the impact of product classification on sales performance
+``` sql
+select p.class_,
+	   count(s.salesid) as sales_count,
+	   round(sum(s.totalprice)::numeric,2) as sales_revenue,
+	   sum(s.quantity) as quantity,
+	   rank() over(order by count(s.salesid) desc) as rank
+	   from sales as s 
+			  join
+			  products as p
+			  on p.productid = s.productid
+	   group by 1;
+```
+
+### 3) Customer Purchase behaviour
+> Segment customers based on their purchase frequency and total spend.
+
+|parameters|value|
+|----------|-----|
+|min purchase frequency| 36|
+|max purchase frequency|103 |
+|avg purchase frequency| 68|
+|min spend |1971 $|
+|max spend |130324 $|
+|avg spend|43868 $|
+
+The customer whose purchase_frequency>90 and total spend>60000 $ then categorized as 'GOLD' segment else "SILVER"
+``` sql
+Select c_customer_segment as Segment,count(customerid) as members from (
+SELECT 
+  s.customerid,
+  c.firstname || ' ' || c.middleinitial || ' ' || c.lastname AS name,
+  COUNT(s.salesid) AS purchase_frequency,
+  Round(sum(s.totalprice)::numeric,2) as total_spend,
+  Case 
+  	when (Round(sum(s.totalprice)::numeric,2) > 60000) OR (count(s.salesid) > 90) Then 'GOLD'
+	else 'SILVER' 
+	END as C_customer_segment
+FROM customers AS c
+JOIN sales AS s ON s.customerid = c.customerid
+GROUP BY s.customerid, name
+ORDER BY total_spend desc )as c_cat 
+group by 1;
+```
+The count of customers in each segment as per above Query
+|Segment| Members|
+|-------|-------|
+|*GOLD*	|29421|
+|*SILVER*|	69338|
+
+> Identify the repeat customers vs 1 time buyer
+
+> Analyze average order value and basket size per customer. 
