@@ -33,10 +33,9 @@ select 	EXTRACT(year from salesdate) as year,
 		group by 1,2 
 		order by 2;
 ```
-
 |"year"|	"month"	|"sales_count"|
 |-------|-----------|--------------|
-|2018|	1	|1607050|
+|2018   |1	|1607050|
 |2018	|2	|1451366|
 |2018	|3	|1609190|
 |2018|	4	|1556091|
@@ -77,7 +76,6 @@ select s.productid,p.productname,
 			  on p.productid = s.productid
 	   group by 1,2;
 ```
-<img src="https://github.com/user-attachments/assets/3e818759-ff76-4aed-867b-f16ea4096bf5" alt="Top 5selling products" style= "width:50%; height:auto;"/>
 
 
 > Analyze sales quantity and revenue to identify high-demand products.
@@ -93,7 +91,10 @@ select s.productid,p.productname,
 			  on p.productid = s.productid
 	   group by 1,2;
 ```
-<img src="https://github.com/user-attachments/assets/23bdc7ae-feef-4fc3-96ed-22543ccb70f7" style= "width:40%; height:auto;" />
+| Top 5 Selling Products by Revenue | Top 5 Selling products by Quantity |
+|-------------------------|--|
+|<img src="https://github.com/user-attachments/assets/88a91afd-e092-4edf-8a7c-77d6cf123685" style= "width:90%; height:auto;" /> |<img src="https://github.com/user-attachments/assets/23bdc7ae-feef-4fc3-96ed-22543ccb70f7" style= "width:80%; height:auto;" />|
+
 
 > Examine the impact of product classification on sales performance
 ``` sql
@@ -146,6 +147,9 @@ The count of customers in each segment as per above Query
 |*GOLD*	|29421|
 |*SILVER*|	69338|
 
+|No.of Customers by Segment|Revenue based on Segment|
+|--|---|
+|<img src="https://github.com/user-attachments/assets/535f85bd-5116-4c6b-bfbe-f2a8095b7d06" style= "width:100%; height:auto;" />|<img src="https://github.com/user-attachments/assets/4eeddc1c-b122-4cd1-846b-2b4fa9e64659" style= "width:90%; height:auto;" />|
 > Identify the repeat customers vs 1 time buyer
 
 > Analyze average order value and basket size per customer.
