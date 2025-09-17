@@ -256,5 +256,5 @@ With City_cat_sales as (Select  c.cityid,ci.city_name,
 		left join category as cat on cat.categoryid = p.category_id
 		group by 1,2,3
 		order by 1,4 desc)
-Select city_name,categoryname,city_sales,rank from City_cat_sales where rank = 10 -- change rank 0 to 11 to know position
+Select city_name,categoryname,city_sales,rank from City_cat_sales where rank = 10 -- change rank 0 to 11 to filter position
 ``` 
