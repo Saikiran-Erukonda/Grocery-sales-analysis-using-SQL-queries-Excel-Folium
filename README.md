@@ -260,3 +260,6 @@ With City_cat_sales as (Select  c.cityid,ci.city_name,
 		order by 1,4 desc)
 Select city_name,categoryname,city_sales,rank from City_cat_sales where rank = 10 -- change rank 0 to 11 to filter position
 ``` 
+|city_id = 54 at rank 9|city_id = 39 at rank 9|
+|------------|-------------|
+|<img src="https://github.com/user-attachments/assets/76311db7-255a-4140-b866-b864ff671327" alt = "Class performance" style= "width:100%; height:auto;"/>|<img src="https://github.com/user-attachments/assets/ad2c13dc-2779-44b5-9674-95c0a9f370b4" alt = "Class performance" style= "width:100%; height:auto;"/>|
