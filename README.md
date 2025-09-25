@@ -243,6 +243,8 @@ select c.cityid,ci.city_name,count(s.salesid) as city_sales,
 		group by 1,2
 		order by 3 desc; 
 ```
+<img width="1378" height="756" alt="Screenshot 2025-09-25 185908" src="https://github.com/user-attachments/assets/f30f2451-4d15-442a-9cae-6d9a47e91a9b" />
+
 > City wise 2nd last Selling Category (rank = 10) 
 ``` sql
 With City_cat_sales as (Select  c.cityid,ci.city_name,
