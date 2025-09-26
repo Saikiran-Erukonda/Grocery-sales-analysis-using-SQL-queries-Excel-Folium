@@ -1,25 +1,3 @@
-create table sales(SalesID	int primary key,
-				   SalesPersonID int,
-				   CustomerID int,
-				   ProductID int,
-				   Quantity	int,
-				   Discount	float,
-				   TotalPrice float,
-				   SalesDate Date, 
-				   TransactionNumber varchar(100),
-				  constraint fk_emp foreign key(SalesPersonID) references Employee(EmployeeID),
-				  constraint fk_customer foreign key(CustomerID) references customers(CustomerID),
-				  constraint fk_product foreign key(ProductID) references Products(ProductID));
-				  
-UPDATE sales as s
-SET totalprice = (s.quantity * p.price) * (1-s.discount)
-from products as p
-where s.productid = p.productid ; 
-
-UPDATE sales set totalprice = Round(totalprice::numeric,2);
-
--- ----------------------------------------------------------------------------
-
 
 SELECT EXTRACT(YEAR from salesdate) as   Year,
 		EXTRACT(Month from salesdate) as Month,
@@ -287,5 +265,6 @@ With City_cat_sales as (Select  c.cityid,ci.city_name,
 		group by 1,2,3
 		order by 1,4 desc)
 Select city_name,categoryname,city_sales,rank from City_cat_sales where rank = 10 -- change rank 0 to 11 to know position  
+
 
 						  
